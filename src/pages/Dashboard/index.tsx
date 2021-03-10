@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import { Title, Form, Users, Error } from './styles'
 import logoImg from '../../assets/images/logo.svg'
 import { FiChevronRight, FiSettings } from 'react-icons/fi';
@@ -18,7 +18,7 @@ const Dashboard: React.FC = () => {
     const [organizations, setOrganization] = useState<User[]>([]);
     const [users, setUsers] = useState<User[]>([]);
     const [newUser, setNewUser] = useState("");
-    const [mainStatus, setmainStatus] = useState(Boolean);
+    const [mainStatus, setmainStatus] = useState(0);
     const [inputError, setInputError] = useState("");
     const [searchLenght, setSearchLenght] = useState(Boolean);
     const [searchUserLenght, setSearchUserLenght] = useState(Boolean);
@@ -26,11 +26,12 @@ const Dashboard: React.FC = () => {
     async function handleAddUsers(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
 
-        if (users.length > 0) {
-            setmainStatus(true)
+        if (users.length >= 0) {
+            setmainStatus(1)
+            if (!newUser) {
+                setmainStatus(0)
+            }
         }
-
-
         if (!newUser) {
             setInputError("Insert the username");
             return;
@@ -43,9 +44,6 @@ const Dashboard: React.FC = () => {
             const response = await api.get<User>(`users/${newUser}`)
             const user = response.data;
 
-            if (organizations.length > 0) {
-                setSearchLenght(true);
-            }
 
             if (user.type === "Organization") {
                 setOrganization([...organizations, user])
@@ -65,6 +63,7 @@ const Dashboard: React.FC = () => {
             setUsers([...users, user]);
             setNewUser('');
             setInputError('')
+
         } catch (err) {
             setInputError('user not found')
         }
