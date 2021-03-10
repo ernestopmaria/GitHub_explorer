@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { shade } from 'polished';
+import empty from '../../assets/images/empty.png'
 
 interface FormProps {
     hasError: boolean
@@ -16,6 +17,10 @@ color:#3a3a3a;
 line-height:56px;
 margin-top:80px;
 max-width:450px;
+`;
+
+export const Empty = styled.div`
+background:url(${empty}) no-repeat;
 `;
 
 export const Form = styled.form<FormProps>`

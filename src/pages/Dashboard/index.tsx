@@ -1,7 +1,8 @@
 import React, { useState, FormEvent, useEffect } from 'react';
-import { Title, Form, Users, Error } from './styles'
+import { Title, Form, Users, Error, Empty } from './styles'
 import logoImg from '../../assets/images/logo.svg'
-import { FiChevronRight, FiSettings } from 'react-icons/fi';
+
+import { FiChevronRight } from 'react-icons/fi';
 import api from '../../services/api'
 
 const Dashboard: React.FC = () => {
@@ -82,7 +83,7 @@ const Dashboard: React.FC = () => {
             </Form>
             {inputError && <Error>{inputError}</Error>}
             {!mainStatus ? (
-                <h1>Nada encontrado</h1>
+                <Empty />
             ) : (
 
                 <Users existisCompany={!!searchLenght} existisUser={!!searchUserLenght}>
