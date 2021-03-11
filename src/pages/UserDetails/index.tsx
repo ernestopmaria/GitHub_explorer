@@ -1,16 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouteMatch, Link } from 'react-router-dom'
 import logoImg from '../../assets/images/logo.svg';
 import { Header, UserInfo, Repositories, Title } from './styles'
 import { FiChevronLeft, FiChevronRight, FiMapPin, FiTool, FiStar } from 'react-icons/fi';
+import api from '../../services/api'
 
 interface UserParams {
     users: string
 }
 
+interface User {
+    name: string;
+    bio: string;
+    followers: number;
+    avatar_url: string;
+    public_repos: string;
+    following: number,
+    events_url: string;
+    location: string;
+
+
+}
+interface Repository {
+    stargazers_count: number;
+    name: string;
+    id: string;
+
+}
+
 
 const UserDetatils: React.FC = () => {
+    const [user, setUser] = useState<User | null>(null)
+    const [repository, setRepository] = useState<Repository[]>([])
     const { params } = useRouteMatch<UserParams>();
+
+    useEffect(() => {
+        api.get(`users/${params.users}`).then(response => {
+        })
+        api.get(`users/${params.users}/repos`).then(response => {
+        })
+    }, [params.users]);
+
 
     return (
         <>
@@ -21,9 +51,9 @@ const UserDetatils: React.FC = () => {
             voltar
         </Link>
             </Header>
-            <UserInfo>
+            {user && (<UserInfo>
                 <header>
-                    <img src="https://avatars.githubusercontent.com/u/58423237?s=460&u=f39d1d5e73424473bc991b93bb36566ecb015b76&v=4" alt="" />
+                    <img src={user.avatar_url} alt={user.name} />
                     <div>
                         <strong>Ernesto Maria</strong>
                         <p><FiTool size={15} />   React Native and NodeJs developer</p>
@@ -44,7 +74,7 @@ const UserDetatils: React.FC = () => {
                         <span> followers</span>
                     </li>
                 </ul>
-            </UserInfo>
+            </UserInfo>)}
 
             <Title>Welcome to my profile , you can explore my repositories here! </Title>
             <Repositories>

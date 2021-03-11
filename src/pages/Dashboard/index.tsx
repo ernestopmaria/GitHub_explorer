@@ -23,11 +23,11 @@ const Dashboard: React.FC = () => {
     }
 
     interface User {
-        name: 'string';
-        description: 'string',
-        login: 'string',
-        avatar_url: 'string',
-        public_repos: 'string',
+        name: string;
+        description: string,
+        login: string,
+        avatar_url: string,
+        public_repos: string,
         type: 'User' | 'Organization'
     }
     const [newUser, setNewUser] = useState("");
