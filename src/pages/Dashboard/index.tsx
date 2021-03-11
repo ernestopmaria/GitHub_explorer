@@ -1,26 +1,25 @@
 import React, { useState, FormEvent, useEffect } from 'react';
-import { Title, Form,TabPanels,  Error} from './styles'
+import { Title, Form, TabPanels, Error } from './styles'
 import logoImg from '../../assets/images/logo.svg'
-//import emptyImg from '../../assets/images/lupa.png'
-
+import { Link } from 'react-router-dom'
 import { FiChevronRight } from 'react-icons/fi';
 import api from '../../services/api'
-import { Theme, makeStyles} from '@material-ui/core/styles';
+import { Theme, makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
-import Typography  from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography';
 
 const Dashboard: React.FC = () => {
 
 
 
-    interface TabPanelProps{
-        children?:React.ReactNode;
-        index:any;
-        value:any;
-      
+    interface TabPanelProps {
+        children?: React.ReactNode;
+        index: any;
+        value: any;
+
     }
 
     interface User {
@@ -33,31 +32,36 @@ const Dashboard: React.FC = () => {
     }
     const [newUser, setNewUser] = useState("");
     const [inputError, setInputError] = useState("");
-   
 
-    const [organizations, setOrganization] = useState<User[]>(()=>{
+
+
+
+    const [initialStatus, setInitialStatus] = useState(false)
+
+
+    const [organizations, setOrganization] = useState<User[]>(() => {
         const storagedOrganization = localStorage.getItem('@GithubExplorer:organizations');
-        if(storagedOrganization){      
+        if (storagedOrganization) {
+            setInitialStatus(true)
             return JSON.parse(storagedOrganization)
-        }     
-        return[]
+        }
+        return []
     });
 
-    const [users, setUsers] = useState<User[]>(()=>{
+    const [users, setUsers] = useState<User[]>(() => {
         const storagedUsers = localStorage.getItem('@GithubExplorer:users');
-        if(storagedUsers){
+        if (storagedUsers) {
+
+
             return JSON.parse(storagedUsers)
-        }  
-        return[]
+        }
+        return []
     });
 
-
-
-
-    useEffect(()=>{
+    useEffect(() => {
         localStorage.setItem('@GithubExplorer:users', JSON.stringify(users))
         localStorage.setItem('@GithubExplorer:organizations', JSON.stringify(organizations))
-    },[users, organizations])
+    }, [users, organizations])
 
     async function handleAddUsers(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
@@ -65,9 +69,11 @@ const Dashboard: React.FC = () => {
             setInputError("Insert the username");
             return;
         }
+
         try {
 
             const response = await api.get<User>(`users/${newUser}`)
+
             const user = response.data;
 
 
@@ -75,28 +81,30 @@ const Dashboard: React.FC = () => {
                 setOrganization([...organizations, user])
                 setNewUser('');
                 setInputError('')
+                setInitialStatus(true)
                 return
             }
             setUsers([...users, user]);
             setNewUser('');
             setInputError('')
+            setInitialStatus(true)
 
         } catch (err) {
             setInputError('user not found')
         }
     }
 
-    function TabPanel(props:TabPanelProps){
-        const {children,index,value, ...other} =props;
+    function TabPanel(props: TabPanelProps) {
+        const { children, index, value, ...other } = props;
 
-        return(
-            <div role="tabpanel" hidden={value !==index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-            className="TabPanels"
+        return (
+            <div role="tabpanel" hidden={value !== index}
+                id={`simple-tabpanel-${index}`}
+                aria-labelledby={`simple-tab-${index}`}
+                {...other}
+                className="TabPanels"
             >
-                {value===index &&(
+                {value === index && (
                     <Box p={3}>
                         <Typography>{children}</Typography>
                     </Box>
@@ -106,23 +114,23 @@ const Dashboard: React.FC = () => {
         );
     }
 
-    function a11yProps(index: any){
-        return{
-            id:`simple-tab-${index}`,
-            'aria-controls':`simple-tabpanel-${index}`,
+    function a11yProps(index: any) {
+        return {
+            id: `simple-tab-${index}`,
+            'aria-controls': `simple-tabpanel-${index}`,
         };
     }
-    const useStyles = makeStyles((theme:Theme)=>({
-        root:{
-            flexGrow:1,
-            backgroundColor:theme.palette.background.paper
+    const useStyles = makeStyles((theme: Theme) => ({
+        root: {
+            flexGrow: 1,
+            backgroundColor: theme.palette.background.paper
         },
     }));
 
     const classes = useStyles();
-    const [value, setValue] =useState(0)
+    const [value, setValue] = useState(0)
 
-    const handleChange =(event:React.ChangeEvent<{}>, newValue:number)=>{
+    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
     }
 
@@ -137,20 +145,22 @@ const Dashboard: React.FC = () => {
                     placeholder="Insert the github username" />
                 <button type="submit">Search</button>
             </Form>
-           
+
+
             {inputError && <Error>{inputError}</Error>}
             <div className={classes.root}>
-                <AppBar position="static" color="transparent"  >
+                <AppBar position="static" color="transparent">
                     <Tabs value={value} onChange={handleChange} aria-label="github-explorer">
-                        <Tab label= {`All (${organizations.length +users.length })`}{...a11yProps(0)}/>
-                        <Tab label= {`Users(${users.length})`}{...a11yProps(1)}/>
-                        <Tab label= {`Companies(${organizations.length})`} {...a11yProps(2)}/>
+                        <Tab label={`All (${organizations.length + users.length})`}{...a11yProps(0)} />
+                        <Tab label={`Users(${users.length})`}{...a11yProps(1)} />
+                        <Tab label={`Companies(${organizations.length})`} {...a11yProps(2)} />
 
                     </Tabs>
                 </AppBar>
-                <TabPanel value={value} index={0}  >
-                <TabPanels className="users" >
-                        {users.map(user => (<a href="user_name" key={user.login}>
+
+                <TabPanel value={value} index={0} >
+                    <TabPanels className="users" >
+                        {users.map(user => (<Link to={`users/${user.login}`} key={user.login}>
                             <img src={user.avatar_url} alt={user.name} />
 
                             <div>
@@ -159,12 +169,12 @@ const Dashboard: React.FC = () => {
                                 <h6>Repositories:{user.public_repos}</h6>
                             </div>
                             <FiChevronRight size={24} />
-                        </a>
+                        </Link>
                         ))}
                     </TabPanels>
                     <TabPanels className="companies">
-                        
-                        {organizations.map(organization => (<a href="user_name" key={organization.login}>
+
+                        {organizations.map(organization => (<Link to={`users/${organization.login}`} key={organization.login}>
                             <img src={organization.avatar_url} alt={organization.name} />
 
                             <div>
@@ -174,14 +184,14 @@ const Dashboard: React.FC = () => {
 
                             </div>
                             <FiChevronRight size={24} />
-                        </a>
+                        </Link>
                         ))}
 
                     </TabPanels>
                 </TabPanel>
-                <TabPanel value={value} index={1} >
-                <TabPanels className="users" >
-                        {users.map(user => (<a href="user_name" key={user.login}>
+                <TabPanel value={value} index={1} >{!!initialStatus ? (
+                    < TabPanels className="users" >
+                        {users.map(user => (<Link to={`users/${user.login}`} key={user.login}>
                             <img src={user.avatar_url} alt={user.name} />
 
                             <div>
@@ -190,28 +200,28 @@ const Dashboard: React.FC = () => {
                                 <h6>Repositories:{user.public_repos}</h6>
                             </div>
                             <FiChevronRight size={24} />
-                        </a>
+                        </Link>
                         ))}
-                    </TabPanels>
+                    </TabPanels>) : (<h1>nada para ,mostrar</h1>)}
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-              
-                    <TabPanels className="companies">
-                     
-                        {organizations.map(organization => (<a href="user_name" key={organization.login}>
-                            <img src={organization.avatar_url} alt={organization.name} />
+                    {!!initialStatus ? (
+                        <TabPanels className="companies">
 
-                            <div>
-                                <strong>{organization.login}</strong>
-                                <p> {organization.name}</p>
-                                <h6>Repositories:{organization.public_repos}</h6>
+                            {organizations.map(organization => (<Link to={`users/${organization.login}`} key={organization.login}>
+                                <img src={organization.avatar_url} alt={organization.name} />
 
-                            </div>
-                            <FiChevronRight size={24} />
-                        </a>
-                        ))}
+                                <div>
+                                    <strong>{organization.login}</strong>
+                                    <p> {organization.name}</p>
+                                    <h6>Repositories:{organization.public_repos}</h6>
 
-                    </TabPanels>
+                                </div>
+                                <FiChevronRight size={24} />
+                            </Link>
+                            ))}
+
+                        </TabPanels>) : (<h1>nada para ,mostrar</h1>)}
                 </TabPanel>
 
             </div>
@@ -219,4 +229,4 @@ const Dashboard: React.FC = () => {
     )
 }
 
-export default Dashboard
+export default Dashboard;

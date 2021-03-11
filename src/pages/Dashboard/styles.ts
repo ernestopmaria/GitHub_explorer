@@ -44,10 +44,14 @@ input{
     color:#3a3a3a;
     border:2px solid #fff;
     border-right:0;
-    margin-bottom:80px;
+    margin-bottom:30px;
+   
+   
 
     ${(props) => props.hasError && css`
     border-color:#c53030;
+   
+    
     `}
   
 
@@ -80,6 +84,8 @@ display:block;
 color:#c53030;
 margin-top:8px;
 flex:1;
+margin-top:-20px;
+margin-bottom:40px;
 `;
 
 export const TabPanels = styled.div`
@@ -87,14 +93,6 @@ export const TabPanels = styled.div`
     flex:1;
     margin-right:10px;
    
-    button{
-        
-        background:transparent;
-        width:100%;
-        border:0;
-        margin-bottom:5px;
-        font-size:0.9rem;
-    }
 
     a{
         background:#fff;
@@ -106,13 +104,15 @@ export const TabPanels = styled.div`
         display:flex;
         align-items:center;
         transition:transform 0.2s;
+        box-shadow: 2px 1px 5px 1px #888888;
+        margin-top:10px;
  
 
         &:hover{
             transform:translateX(5px);
         }
         & + a {
-            margin-top:16px;
+            margin-top:20px;
         }
 
         img{
