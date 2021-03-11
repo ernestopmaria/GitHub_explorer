@@ -1,15 +1,11 @@
 import styled, { css } from 'styled-components';
 import { shade } from 'polished';
-import empty from '../../assets/images/empty.png'
+
 
 interface FormProps {
     hasError: boolean
 }
 
-interface UserProps {
-    existisUser: boolean;
-    existisCompany: boolean
-}
 
 export const Title = styled.h1`
 font-size:48px;
@@ -20,7 +16,17 @@ max-width:450px;
 `;
 
 export const Empty = styled.div`
-background:url(${empty}) no-repeat;
+
+margin:40px auto;
+
+width:220px;
+height:220px;
+align-content:center;
+
+h2{
+    margin-left:35px;
+}
+            
 `;
 
 export const Form = styled.form<FormProps>`
@@ -38,6 +44,7 @@ input{
     color:#3a3a3a;
     border:2px solid #fff;
     border-right:0;
+    margin-bottom:80px;
 
     ${(props) => props.hasError && css`
     border-color:#c53030;
@@ -75,22 +82,8 @@ margin-top:8px;
 flex:1;
 `;
 
-export const Users = styled.div<UserProps>`
-margin-top:50px;
-max-width:1000px;
-flex:1;
-justify-content:space-between;
-display:flex;
+export const TabPanels = styled.div`
 
-h1{
-    font-size:25px;
-    color:#3a3a3a;
-    margin-bottom:12px;
-}
-
-
-
-.users{
     flex:1;
     margin-right:10px;
    
@@ -101,10 +94,6 @@ h1{
         border:0;
         margin-bottom:5px;
         font-size:0.9rem;
-        ${(props) => props.existisUser && css`
-            border-bottom:4px solid rgb(214, 157, 251);
-    `}
-       
     }
 
     a{
@@ -140,7 +129,7 @@ h1{
             font-size:20px;
             color:rgb(96, 87, 103);
         }
-        p{
+        p, h6{
             font-size:18px;
             color:#A8A8B3;
             margin-top:4px;
@@ -151,73 +140,6 @@ h1{
         color:rgb(214, 157, 251);
     }
     }
-}
 
-.companies{
-    flex:1;
-    margin-left:5px;
-
-    button{
-       
-        background:transparent;
-        width:100%;
-        border:0;
-        margin-bottom:5px;
-        font-size:0.9rem;
-        border-bottom:4px solid transparent;
-
-        ${(props) => props.existisCompany && css`
-            border-bottom:4px solid rgb(214, 157, 251);
-    `}
-
-    }
-       
-
-
-a{
-    background:#fff;
-    border-radius: 5px;
-    width: 100%;
-    padding: 24px;
-    display: block;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    transition: transform 0.2s;
-
-    
-    &:hover{
-        transform: translateX(5px);
-    }
-
-        & + a {
-        margin-top: 16px;
-    }
-
-    img{
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-    }
-    div{
-        margin-left: 16px;
-        flex: 1;
-
-        strong{
-            font-size: 20px;
-            color: rgb(96, 87, 103);
-        }
-        p{
-            font-size: 18px;
-            color:#A8A8B3;
-            margin-top: 4px;
-        }
-    }
-    svg{
-        margin: auto;
-        color: rgb(214, 157, 251);
-    }
-}
-}
 
 `;

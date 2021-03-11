@@ -1,11 +1,27 @@
 import React, { useState, FormEvent, useEffect } from 'react';
-import { Title, Form, Users, Error, Empty } from './styles'
+import { Title, Form,TabPanels,  Error} from './styles'
 import logoImg from '../../assets/images/logo.svg'
+//import emptyImg from '../../assets/images/lupa.png'
 
 import { FiChevronRight } from 'react-icons/fi';
 import api from '../../services/api'
+import { Theme, makeStyles} from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import AppBar from '@material-ui/core/AppBar';
+import Typography  from '@material-ui/core/Typography';
 
 const Dashboard: React.FC = () => {
+
+
+
+    interface TabPanelProps{
+        children?:React.ReactNode;
+        index:any;
+        value:any;
+      
+    }
 
     interface User {
         name: 'string';
@@ -15,31 +31,40 @@ const Dashboard: React.FC = () => {
         public_repos: 'string',
         type: 'User' | 'Organization'
     }
-
-    const [organizations, setOrganization] = useState<User[]>([]);
-    const [users, setUsers] = useState<User[]>([]);
     const [newUser, setNewUser] = useState("");
-    const [mainStatus, setmainStatus] = useState(0);
     const [inputError, setInputError] = useState("");
-    const [searchLenght, setSearchLenght] = useState(Boolean);
-    const [searchUserLenght, setSearchUserLenght] = useState(Boolean);
+   
+
+    const [organizations, setOrganization] = useState<User[]>(()=>{
+        const storagedOrganization = localStorage.getItem('@GithubExplorer:organizations');
+        if(storagedOrganization){      
+            return JSON.parse(storagedOrganization)
+        }     
+        return[]
+    });
+
+    const [users, setUsers] = useState<User[]>(()=>{
+        const storagedUsers = localStorage.getItem('@GithubExplorer:users');
+        if(storagedUsers){
+            return JSON.parse(storagedUsers)
+        }  
+        return[]
+    });
+
+
+
+
+    useEffect(()=>{
+        localStorage.setItem('@GithubExplorer:users', JSON.stringify(users))
+        localStorage.setItem('@GithubExplorer:organizations', JSON.stringify(organizations))
+    },[users, organizations])
 
     async function handleAddUsers(event: FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
-
-        if (users.length >= 0) {
-            setmainStatus(1)
-            if (!newUser) {
-                setmainStatus(0)
-            }
-        }
         if (!newUser) {
             setInputError("Insert the username");
             return;
         }
-
-
-
         try {
 
             const response = await api.get<User>(`users/${newUser}`)
@@ -50,16 +75,7 @@ const Dashboard: React.FC = () => {
                 setOrganization([...organizations, user])
                 setNewUser('');
                 setInputError('')
-
-                if (organizations.length >= 0) {
-                    setSearchLenght(true);
-                    return
-                }
                 return
-            }
-            if (users.length >= 0) {
-                setSearchUserLenght(true);
-
             }
             setUsers([...users, user]);
             setNewUser('');
@@ -68,6 +84,46 @@ const Dashboard: React.FC = () => {
         } catch (err) {
             setInputError('user not found')
         }
+    }
+
+    function TabPanel(props:TabPanelProps){
+        const {children,index,value, ...other} =props;
+
+        return(
+            <div role="tabpanel" hidden={value !==index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+            className="TabPanels"
+            >
+                {value===index &&(
+                    <Box p={3}>
+                        <Typography>{children}</Typography>
+                    </Box>
+                )}
+
+            </div>
+        );
+    }
+
+    function a11yProps(index: any){
+        return{
+            id:`simple-tab-${index}`,
+            'aria-controls':`simple-tabpanel-${index}`,
+        };
+    }
+    const useStyles = makeStyles((theme:Theme)=>({
+        root:{
+            flexGrow:1,
+            backgroundColor:theme.palette.background.paper
+        },
+    }));
+
+    const classes = useStyles();
+    const [value, setValue] =useState(0)
+
+    const handleChange =(event:React.ChangeEvent<{}>, newValue:number)=>{
+        setValue(newValue);
     }
 
     return (
@@ -81,50 +137,84 @@ const Dashboard: React.FC = () => {
                     placeholder="Insert the github username" />
                 <button type="submit">Search</button>
             </Form>
+           
             {inputError && <Error>{inputError}</Error>}
-            {!mainStatus ? (
-                <Empty />
-            ) : (
+            <div className={classes.root}>
+                <AppBar position="static" color="transparent"  >
+                    <Tabs value={value} onChange={handleChange} aria-label="github-explorer">
+                        <Tab label= {`All (${organizations.length +users.length })`}{...a11yProps(0)}/>
+                        <Tab label= {`Users(${users.length})`}{...a11yProps(1)}/>
+                        <Tab label= {`Companies(${organizations.length})`} {...a11yProps(2)}/>
 
-                <Users existisCompany={!!searchLenght} existisUser={!!searchUserLenght}>
-
-                    <div className="users">
-
-                        <button>Single Users({users.length})</button>
+                    </Tabs>
+                </AppBar>
+                <TabPanel value={value} index={0}  >
+                <TabPanels className="users" >
                         {users.map(user => (<a href="user_name" key={user.login}>
                             <img src={user.avatar_url} alt={user.name} />
 
                             <div>
                                 <strong>{user.login}</strong>
                                 <p> {user.name}</p>
-                                <p><h6>Repositories:{user.public_repos}</h6></p>
+                                <h6>Repositories:{user.public_repos}</h6>
                             </div>
                             <FiChevronRight size={24} />
                         </a>
                         ))}
-                    </div>
-
-
-
-
-
-                    <div className="companies">
-                        <button>Organizations({organizations.length})</button>
-                        {organizations.map(organization => (<a href="user_name" key={organization.name}>
+                    </TabPanels>
+                    <TabPanels className="companies">
+                        
+                        {organizations.map(organization => (<a href="user_name" key={organization.login}>
                             <img src={organization.avatar_url} alt={organization.name} />
 
                             <div>
                                 <strong>{organization.login}</strong>
                                 <p> {organization.name}</p>
-                                <p><h6>Repositories:{organization.public_repos}</h6> </p>
+                                <h6>Repositories:{organization.public_repos}</h6>
 
                             </div>
                             <FiChevronRight size={24} />
                         </a>
                         ))}
 
-                    </div>
-                </Users>)}
+                    </TabPanels>
+                </TabPanel>
+                <TabPanel value={value} index={1} >
+                <TabPanels className="users" >
+                        {users.map(user => (<a href="user_name" key={user.login}>
+                            <img src={user.avatar_url} alt={user.name} />
+
+                            <div>
+                                <strong>{user.login}</strong>
+                                <p> {user.name}</p>
+                                <h6>Repositories:{user.public_repos}</h6>
+                            </div>
+                            <FiChevronRight size={24} />
+                        </a>
+                        ))}
+                    </TabPanels>
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+              
+                    <TabPanels className="companies">
+                     
+                        {organizations.map(organization => (<a href="user_name" key={organization.login}>
+                            <img src={organization.avatar_url} alt={organization.name} />
+
+                            <div>
+                                <strong>{organization.login}</strong>
+                                <p> {organization.name}</p>
+                                <h6>Repositories:{organization.public_repos}</h6>
+
+                            </div>
+                            <FiChevronRight size={24} />
+                        </a>
+                        ))}
+
+                    </TabPanels>
+                </TabPanel>
+
+            </div>
         </>
     )
 }
