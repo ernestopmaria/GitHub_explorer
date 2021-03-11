@@ -51,37 +51,37 @@ const UserDetatils: React.FC = () => {
             voltar
         </Link>
             </Header>
-            {user && (<UserInfo>
+            (<UserInfo>
                 <header>
                     <img src={user.avatar_url} alt={user.name} />
                     <div>
-                        <strong>Ernesto Maria</strong>
-                        <p><FiTool size={15} />   React Native and NodeJs developer</p>
-                        <h5><FiMapPin size={12} />    Luanda Angola</h5>
+                        <strong>{user.name}</strong>
+                        <p><FiTool size={15} />  {user.bio}</p>
+                        <h5><FiMapPin size={12} />   {user.location}</h5>
                     </div>
                 </header>
                 <ul>
                     <li>
-                        <strong>50</strong>
+                        <strong>{user.public_repos}</strong>
                         <span> Publics repos</span>
                     </li>
                     <li>
-                        <strong>25</strong>
+                        <strong>{user.following}</strong>
                         <span> following</span>
                     </li>
                     <li>
-                        <strong>56</strong>
+                        <strong>{user.followers}</strong>
                         <span> followers</span>
                     </li>
                 </ul>
-            </UserInfo>)}
+            </UserInfo>
 
             <Title>Welcome to my profile , you can explore my repositories here! </Title>
             <Repositories>
                 <Link to="jxjsds">
 
                     <div>
-                        <strong>React Landing page</strong>
+                        <strong>Agua</strong>
                         <p><FiStar size={15} /> 2</p>
                     </div>
                     <FiChevronRight size={20} />
