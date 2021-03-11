@@ -31,15 +31,18 @@ interface Repository {
 
 const UserDetatils: React.FC = () => {
     const [user, setUser] = useState<User | null>(null)
-    const [repository, setRepository] = useState<Repository[]>([])
+    const [repository, setRepository] = useState<Repository[]>([]);
     const { params } = useRouteMatch<UserParams>();
+
 
     useEffect(() => {
         api.get(`users/${params.users}`).then(response => {
+            setUser(response.data)
         })
         api.get(`users/${params.users}/repos`).then(response => {
-        })
-    }, [params.users]);
+            setRepository(response.data)
+        });
+    }, [params.users, repository]);
 
 
     return (
@@ -50,8 +53,9 @@ const UserDetatils: React.FC = () => {
                     <FiChevronLeft size={24} />
             voltar
         </Link>
-            </Header>
-            (<UserInfo>
+            </Header> 
+            {user && (
+            <UserInfo>
                 <header>
                     <img src={user.avatar_url} alt={user.name} />
                     <div>
@@ -75,19 +79,20 @@ const UserDetatils: React.FC = () => {
                     </li>
                 </ul>
             </UserInfo>
+            )}
 
             <Title>Welcome to my profile , you can explore my repositories here! </Title>
-            <Repositories>
+            {repository.map(repositor=>(<Repositories key={repositor.id}>
                 <Link to="jxjsds">
 
                     <div>
-                        <strong>Agua</strong>
-                        <p><FiStar size={15} /> 2</p>
+                        <strong>{repositor.name}</strong>
+                        <p><FiStar size={15} />:{repositor.stargazers_count}</p>
                     </div>
                     <FiChevronRight size={20} />
                 </Link>
 
-            </Repositories>
+            </Repositories>))}
         </>
     )
 }

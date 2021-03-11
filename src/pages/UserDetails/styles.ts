@@ -82,15 +82,16 @@ margin-top:80px;
 
           
           &+li{
-              margin-left:80px;
+              margin-left:60px;
           }
 
             strong{
                 display:flex;
-                font-size:26px;
+                font-size:20px;
+                border-bottom:2px solid #3d3d4d;
                 color:#3d3d4d;
-                width:60px;
-                height:60px;
+                width:70px;
+                height:70px;
                 background:rgb(214, 157, 251);
                 border-radius:50%;
                 justify-content:center;
