@@ -36,6 +36,7 @@ display:flex;
 
 
 input{
+    max-width:80%;
     padding:0 40px;
     border:0;
     border-radius:5px 0 0 5px;
@@ -61,9 +62,10 @@ input{
 }
 
 button{
+    
     border-radius:0 5px 5px 0;
     height:70px;
-    width:100%;
+    width:20%;
     border:0;
     background:rgb(214, 157, 251);
     color :rgb(96, 87, 103);
