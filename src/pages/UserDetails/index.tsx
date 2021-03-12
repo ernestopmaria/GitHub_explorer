@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch, Link } from 'react-router-dom'
 import logoImg from '../../assets/images/logo.svg';
-import { Header, UserInfo, Repositories, Title, LoadingFlag } from './styles'
+import { Header, UserInfo, Repositories, Title, LoadingFlag, No } from './styles'
 import { FiChevronLeft, FiChevronRight, FiMapPin, FiTool, FiStar } from 'react-icons/fi';
 import api from '../../services/api'
 import { CircularProgress } from '@material-ui/core';
