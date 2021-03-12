@@ -1,8 +1,8 @@
 import React, { useState, FormEvent, useEffect } from 'react';
-import { Title, Form, TabPanels, Error } from './styles'
+import { Title, Form, TabPanels, Error, No } from './styles'
 import logoImg from '../../assets/images/logo.svg'
 import { Link } from 'react-router-dom'
-import { FiChevronRight } from 'react-icons/fi';
+import { FiChevronRight, FiSearch } from 'react-icons/fi';
 import api from '../../services/api'
 import { Theme, makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -11,7 +11,8 @@ import Tab from '@material-ui/core/Tab';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 
-const Dashboard: React.FC = () => {
+
+const Dashboard: React.FC<void> = () => {
 
 
 
@@ -28,7 +29,7 @@ const Dashboard: React.FC = () => {
         login: string,
         avatar_url: string,
         public_repos: string,
-        type: 'User' | 'Organization'
+        type: 'User' | 'Organization',
     }
     const [newUser, setNewUser] = useState("");
     const [inputError, setInputError] = useState("");
@@ -88,6 +89,7 @@ const Dashboard: React.FC = () => {
             setNewUser('');
             setInputError('')
             setInitialStatus(true)
+
 
         } catch (err) {
             setInputError('user not found')
@@ -158,7 +160,7 @@ const Dashboard: React.FC = () => {
                     </Tabs>
                 </AppBar>
 
-                <TabPanel value={value} index={0} >
+                <TabPanel value={value} index={0} >{!!initialStatus ? (
                     <TabPanels className="users" >
                         {users.map(user => (<Link to={`users/${user.login}`} key={user.login}>
                             <img src={user.avatar_url} alt={user.name} />
@@ -171,7 +173,7 @@ const Dashboard: React.FC = () => {
                             <FiChevronRight size={24} />
                         </Link>
                         ))}
-                    </TabPanels>
+                    </TabPanels>) : (<No><h6> No users or company! you can search one  <FiSearch size={16} /></h6></No>)}
                     <TabPanels className="companies">
 
                         {organizations.map(organization => (<Link to={`users/${organization.login}`} key={organization.login}>
@@ -189,6 +191,7 @@ const Dashboard: React.FC = () => {
 
                     </TabPanels>
                 </TabPanel>
+
                 <TabPanel value={value} index={1} >{!!initialStatus ? (
                     < TabPanels className="users" >
                         {users.map(user => (<Link to={`users/${user.login}`} key={user.login}>
@@ -202,7 +205,7 @@ const Dashboard: React.FC = () => {
                             <FiChevronRight size={24} />
                         </Link>
                         ))}
-                    </TabPanels>) : (<h1>nada para ,mostrar</h1>)}
+                    </TabPanels>) : (<No><h6> No users or company! you can search one  <FiSearch size={16} /></h6></No>)}
                 </TabPanel>
                 <TabPanel value={value} index={2}>
                     {!!initialStatus ? (
@@ -221,7 +224,7 @@ const Dashboard: React.FC = () => {
                             </Link>
                             ))}
 
-                        </TabPanels>) : (<h1>nada para ,mostrar</h1>)}
+                        </TabPanels>) : (<No><h6> No users or company! you can search one  <FiSearch size={16} /></h6></No>)}
                 </TabPanel>
 
             </div>

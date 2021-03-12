@@ -143,3 +143,19 @@ export const TabPanels = styled.div`
 
 
 `;
+
+
+export const No = styled.div`
+
+
+margin: 40px auto ;
+
+h6{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:0 auto 0 auto;
+}
+`
+
+

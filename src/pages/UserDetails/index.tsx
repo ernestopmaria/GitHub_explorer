@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch, Link } from 'react-router-dom'
 import logoImg from '../../assets/images/logo.svg';
-import { Header, UserInfo, Repositories, Title } from './styles'
+import { Header, UserInfo, Repositories, Title, LoadingFlag } from './styles'
 import { FiChevronLeft, FiChevronRight, FiMapPin, FiTool, FiStar } from 'react-icons/fi';
 import api from '../../services/api'
+import { CircularProgress } from '@material-ui/core';
 
 interface UserParams {
     users: string
@@ -53,37 +54,38 @@ const UserDetatils: React.FC = () => {
                     <FiChevronLeft size={24} />
             voltar
         </Link>
-            </Header> 
+            </Header>
             {user && (
-            <UserInfo>
-                <header>
-                    <img src={user.avatar_url} alt={user.name} />
-                    <div>
-                        <strong>{user.name}</strong>
-                        <p><FiTool size={15} />  {user.bio}</p>
-                        <h5><FiMapPin size={12} />   {user.location}</h5>
-                    </div>
-                </header>
-                <ul>
-                    <li>
-                        <strong>{user.public_repos}</strong>
-                        <span> Publics repos</span>
-                    </li>
-                    <li>
-                        <strong>{user.following}</strong>
-                        <span> following</span>
-                    </li>
-                    <li>
-                        <strong>{user.followers}</strong>
-                        <span> followers</span>
-                    </li>
-                </ul>
-            </UserInfo>
-            )}
+                <UserInfo>
+                    <header>
+                        <img src={user.avatar_url} alt={user.name} />
+                        <div>
+                            <strong>{user.name}</strong>
+                            <p><FiTool size={15} />  {user.bio}</p>
+                            <h5><FiMapPin size={12} />   {user.location}</h5>
+                        </div>
+                    </header>
+                    <ul>
+                        <li>
+                            <strong>{user.public_repos}</strong>
+                            <span> Publics repos</span>
+                        </li>
+                        <li>
+                            <strong>{user.following}</strong>
+                            <span> following</span>
+                        </li>
+                        <li>
+                            <strong>{user.followers}</strong>
+                            <span> followers</span>
+                        </li>
+                    </ul>
+                </UserInfo>)}
 
-            <Title>Welcome to my profile , you can explore my repositories here! </Title>
-            {repository.map(repositor=>(<Repositories key={repositor.id}>
-                <Link to="jxjsds">
+
+            {user ? <Title>Welcome to my profile , you can explore my ({repository.length}) repositories here!</Title> : (<LoadingFlag><CircularProgress disableShrink /></LoadingFlag>)}
+
+            {repository.map(repositor => (<Repositories key={repositor.id}>
+                <Link to="example" >
 
                     <div>
                         <strong>{repositor.name}</strong>

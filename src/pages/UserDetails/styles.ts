@@ -164,3 +164,22 @@ svg{
 
 
 `;
+
+export const LoadingFlag = styled.div`
+
+flex:1;
+margin-left:50%;
+margin-top: 50%;
+`
+export const No = styled.div`
+
+
+margin: 40px auto ;
+
+h6{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:0 auto 0 auto;
+}
+`

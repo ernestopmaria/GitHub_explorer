@@ -1,4 +1,4 @@
-import {createGlobalStyle} from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import githubbackground from '../assets/images/github-background.svg'
 
 export default createGlobalStyle`
@@ -27,4 +27,5 @@ body, input,button {
 button{
     cursor: pointer;
 }
+
 `;
