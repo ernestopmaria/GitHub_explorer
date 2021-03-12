@@ -20,7 +20,6 @@ interface User {
     events_url: string;
     location: string;
 
-
 }
 interface Repository {
     stargazers_count: number;
@@ -28,7 +27,6 @@ interface Repository {
     id: string;
 
 }
-
 
 const UserDetatils: React.FC = () => {
     const [user, setUser] = useState<User | null>(null)
@@ -44,7 +42,6 @@ const UserDetatils: React.FC = () => {
             setRepository(response.data)
         });
     }, [params.users, repository]);
-
 
     return (
         <>
@@ -82,7 +79,8 @@ const UserDetatils: React.FC = () => {
                 </UserInfo>)}
 
 
-            {user ? <Title>Welcome to my profile , you can explore my ({repository.length}) repositories here!</Title> : (<LoadingFlag><CircularProgress disableShrink /></LoadingFlag>)}
+            {user ? <Title>Welcome to my profile , you can explore my ({repository.length}) repositories here!</Title> :
+                (<LoadingFlag><CircularProgress disableShrink /></LoadingFlag>)}
 
             {repository.map(repositor => (<Repositories key={repositor.id}>
                 <Link to="example" >

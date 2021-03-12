@@ -14,8 +14,6 @@ import Typography from '@material-ui/core/Typography';
 
 const Dashboard: React.FC<void> = () => {
 
-
-
     interface TabPanelProps {
         children?: React.ReactNode;
         index: any;
@@ -33,12 +31,7 @@ const Dashboard: React.FC<void> = () => {
     }
     const [newUser, setNewUser] = useState("");
     const [inputError, setInputError] = useState("");
-
-
-
-
     const [initialStatus, setInitialStatus] = useState(false)
-
 
     const [organizations, setOrganization] = useState<User[]>(() => {
         const storagedOrganization = localStorage.getItem('@GithubExplorer:organizations');
@@ -52,10 +45,9 @@ const Dashboard: React.FC<void> = () => {
     const [users, setUsers] = useState<User[]>(() => {
         const storagedUsers = localStorage.getItem('@GithubExplorer:users');
         if (storagedUsers) {
-
-
             return JSON.parse(storagedUsers)
         }
+
         return []
     });
 
@@ -74,9 +66,7 @@ const Dashboard: React.FC<void> = () => {
         try {
 
             const response = await api.get<User>(`users/${newUser}`)
-
             const user = response.data;
-
 
             if (user.type === "Organization") {
                 setOrganization([...organizations, user])
@@ -89,7 +79,6 @@ const Dashboard: React.FC<void> = () => {
             setNewUser('');
             setInputError('')
             setInitialStatus(true)
-
 
         } catch (err) {
             setInputError('user not found')
