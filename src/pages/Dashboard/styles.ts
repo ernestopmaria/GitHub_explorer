@@ -63,7 +63,7 @@ input{
 button{
     border-radius:0 5px 5px 0;
     height:70px;
-    width:100px;
+    width:100%;
     border:0;
     background:rgb(214, 157, 251);
     color :rgb(96, 87, 103);
